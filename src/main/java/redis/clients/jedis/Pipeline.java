@@ -62,6 +62,18 @@ public class Pipeline extends MultiKeyPipelineBase implements Closeable {
     return getResponse(builder);
   }
 
+  public <T> Response<T> sendCommand(Builder<T> builder, final byte[] command, byte[]... args) {
+    ProtocolCommand protocolCommand = new ProtocolCommand() {
+      @Override
+      public byte[] getRaw() {
+        return command;
+      }
+    };
+
+    client.sendCommand(protocolCommand, args);
+    return getResponse(builder);
+  }
+
   @Override
   protected <T> Response<T> getResponse(Builder<T> builder) {
     if (currentMulti != null) {
